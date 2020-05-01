@@ -1,29 +1,63 @@
 package com.demo.orderservice.beans;
 
+import java.math.BigDecimal;
+
 public class Product {
 
-    String productID;
+    private Long id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private Integer quantity;
 
     protected Product() {
-
     }
 
-    public String getProductID() {
-        return productID;
+    public Long getId() {
+        return id;
     }
 
-    public void setProductID(String productID) {
-        this.productID = productID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Product(String productID) {
-        this.productID = productID;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productID='" + productID + '\'' +
-                '}';
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Product(Long id, String name, String description, BigDecimal price, Integer quantity) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 }

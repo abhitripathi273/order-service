@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Async OrderService
+ * Used to call Feign Clients in async way
+ */
 @Service
 public class AsyncOrderService {
 
