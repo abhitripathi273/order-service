@@ -3,7 +3,8 @@ Order - Service
 2 Operations
 
 Create Order
-POST Request http://localhost:8200/shop/order
+
+POST Request http://localhost:8200/create-order
 
 Post Body
 {
@@ -12,5 +13,4 @@ Post Body
 }
 
 Get Order
-Get Request
-http://localhost:8200/shop/order/{orderId}
+Get Request http://localhost:8200/order/{orderId}
