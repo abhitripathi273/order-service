@@ -1,8 +1,9 @@
 package com.demo.orderservice.beans;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private long userId;
     private String firstName;

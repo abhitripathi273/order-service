@@ -1,8 +1,9 @@
 package com.demo.orderservice.beans;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Product {
+public class Product implements Serializable {
 
     private Long id;
     private String name;
