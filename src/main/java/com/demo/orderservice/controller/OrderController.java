@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
@@ -39,7 +40,7 @@ public class OrderController {
      * @throws JsonProcessingException
      */
     @PostMapping(path = "/create-order")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest requestBody) throws InterruptedException, ExecutionException, JsonProcessingException {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest requestBody) throws InterruptedException, ExecutionException, JsonProcessingException {
 
         String productId = requestBody.getProductId();
         String userId = requestBody.getUserId();
