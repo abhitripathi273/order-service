@@ -1,14 +1,36 @@
 package com.demo.orderservice.beans;
 
-public class ShippingAddress {
+import java.io.Serializable;
 
+public class ShippingAddress implements Serializable {
+
+    private Long userId;
+    private Long addressId;
     private Integer pinCode;
     private String area;
     private String district;
     private String state;
     private String country;
     private boolean defaultAddress;
-    private User user;
+
+    protected ShippingAddress() {
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
 
     public Integer getPinCode() {
         return pinCode;
@@ -58,38 +80,28 @@ public class ShippingAddress {
         this.defaultAddress = defaultAddress;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    protected ShippingAddress() {
-
-    }
-
-    public ShippingAddress(Integer pinCode, String area, String district, String state, String country, boolean defaultAddress, User user) {
+    public ShippingAddress(Long userId, Long addressId, Integer pinCode, String area, String district, String state, String country, boolean defaultAddress) {
+        this.userId = userId;
+        this.addressId = addressId;
         this.pinCode = pinCode;
         this.area = area;
         this.district = district;
         this.state = state;
         this.country = country;
         this.defaultAddress = defaultAddress;
-        this.user = user;
     }
 
     @Override
     public String toString() {
         return "ShippingAddress{" +
-                "pinCode=" + pinCode +
+                "userId=" + userId +
+                ", addressId=" + addressId +
+                ", pinCode=" + pinCode +
                 ", area='" + area + '\'' +
                 ", district='" + district + '\'' +
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
                 ", defaultAddress=" + defaultAddress +
-                ", user=" + user +
                 '}';
     }
 }

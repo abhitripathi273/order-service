@@ -10,6 +10,8 @@ public class Order implements Serializable {
 
     private User user;
 
+    private ShippingAddress shippingAddress;
+
     private int port;
 
     protected Order() {
@@ -40,6 +42,14 @@ public class Order implements Serializable {
         this.user = user;
     }
 
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
     public int getPort() {
         return port;
     }
@@ -48,10 +58,12 @@ public class Order implements Serializable {
         this.port = port;
     }
 
-    public Order(String orderId, Product product, User user, int port) {
+
+    public Order(String orderId, Product product, User user, ShippingAddress shippingAddress, int port) {
         this.orderId = orderId;
         this.product = product;
         this.user = user;
+        this.shippingAddress = shippingAddress;
         this.port = port;
     }
 
@@ -61,6 +73,7 @@ public class Order implements Serializable {
                 "orderId='" + orderId + '\'' +
                 ", product=" + product +
                 ", user=" + user +
+                ", shippingAddress=" + shippingAddress +
                 ", port=" + port +
                 '}';
     }

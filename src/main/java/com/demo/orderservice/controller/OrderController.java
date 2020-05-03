@@ -2,6 +2,8 @@ package com.demo.orderservice.controller;
 
 import com.demo.orderservice.beans.Order;
 import com.demo.orderservice.beans.OrderRequest;
+import com.demo.orderservice.beans.ShippingAddress;
+import com.demo.orderservice.exception.NotFoundException;
 import com.demo.orderservice.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,11 +42,14 @@ public class OrderController {
      * @throws JsonProcessingException
      */
     @PostMapping(path = "/create-order")
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest requestBody) throws InterruptedException, ExecutionException, JsonProcessingException {
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest requestBody) throws InterruptedException, ExecutionException, JsonProcessingException, NotFoundException {
+
 
         String productId = requestBody.getProductId();
         String userId = requestBody.getUserId();
-        Order order = orderService.createOrder(productId, userId);
+        ShippingAddress shippingAddress = requestBody.getShippingAddress();
+
+        Order order = orderService.createOrder(productId, userId, shippingAddress);
 
         return new ResponseEntity(order, HttpStatus.CREATED);
     }

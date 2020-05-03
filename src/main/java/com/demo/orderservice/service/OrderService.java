@@ -2,7 +2,9 @@ package com.demo.orderservice.service;
 
 import com.demo.orderservice.beans.Order;
 import com.demo.orderservice.beans.Product;
+import com.demo.orderservice.beans.ShippingAddress;
 import com.demo.orderservice.beans.User;
+import com.demo.orderservice.exception.NotFoundException;
 import com.demo.orderservice.listener.RedisListenerImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -41,12 +44,13 @@ public class OrderService {
      *
      * @param productId
      * @param userId
+     * @param shippingAddress
      * @return
      * @throws InterruptedException
      * @throws ExecutionException
      * @throws JsonProcessingException
      */
-    public Order createOrder(String productId, String userId) throws InterruptedException, ExecutionException, JsonProcessingException {
+    public Order createOrder(String productId, String userId, ShippingAddress shippingAddress) throws InterruptedException, ExecutionException, JsonProcessingException, NotFoundException {
         // Call Product Microservice if the product exists or not
         //To check if the product its there or not
 
@@ -61,11 +65,25 @@ public class OrderService {
         CompletableFuture<Product> product = asyncOrderService.getProduct(productId);
         CompletableFuture<User> user = asyncOrderService.getUserInfo(userId);
 
-        CompletableFuture.allOf(product, user).join();
+        CompletableFuture.allOf(user).join();
+
+        if(user.get().getUserId()==null){
+            throw new NotFoundException("User not found");
+        }
+
+        CompletableFuture<ResponseEntity<ShippingAddress>> shippingAddressResponse = asyncOrderService.getShippingAddress(userId, shippingAddress);
+
+        CompletableFuture.allOf(product, shippingAddressResponse).join();
+
+        if(product.get().getId()==null){
+            throw new NotFoundException("Product not found");
+        }
 
         int port = Integer.parseInt(environment.getProperty("local.server.port"));
         String orderId = UUID.randomUUID().toString();
-        Order order = new Order(orderId, product.get(), user.get(), port);
+
+
+        Order order = new Order(orderId, product.get(), user.get(), shippingAddressResponse.get().getBody(), port);
 
         //Set the Order in Redis with orderId as the Key
         RBucket<String> bucket = redissonClient.getBucket(orderId);

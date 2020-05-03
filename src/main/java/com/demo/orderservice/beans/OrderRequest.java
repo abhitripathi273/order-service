@@ -1,8 +1,6 @@
 package com.demo.orderservice.beans;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
 
@@ -10,6 +8,9 @@ public class OrderRequest {
     String productId;
     @NotBlank
     String userId;
+
+    ShippingAddress shippingAddress;
+
 
     public String getProductId() {
         return productId;
@@ -19,4 +20,7 @@ public class OrderRequest {
         return userId;
     }
 
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
 }

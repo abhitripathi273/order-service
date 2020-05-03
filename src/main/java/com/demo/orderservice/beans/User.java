@@ -1,25 +1,23 @@
 package com.demo.orderservice.beans;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class User implements Serializable {
 
-    private long userId;
+    private Long userId;
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNumber;
-    //private List<ShippingAddress> shippingAddress;
-    protected User() {
 
+    protected User() {
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -55,21 +53,12 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    /*public List<ShippingAddress> getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(List<ShippingAddress> shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }*/
-
-    public User(long userId, String firstName, String lastName, String email, String phoneNumber) {
+    public User(Long userId, String firstName, String lastName, String email, String phoneNumber) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        //this.shippingAddress = shippingAddress;
     }
 
     @Override
@@ -80,6 +69,6 @@ public class User implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", shippingAddress=" +                 '}';
+                '}';
     }
 }

@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 public class Product implements Serializable {
 
     private Long id;
+    private String productCategory;
     private String name;
-    private String description;
+    private String shortDescription;
+    private String longDescription;
     private BigDecimal price;
-    private Integer quantity;
 
     protected Product() {
     }
@@ -22,6 +23,14 @@ public class Product implements Serializable {
         this.id = id;
     }
 
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
+
     public String getName() {
         return name;
     }
@@ -30,12 +39,20 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
     public BigDecimal getPrice() {
@@ -46,30 +63,24 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Product(Long id, String name, String description, BigDecimal price, Integer quantity) {
+    public Product(Long id, String productCategory, String name, String shortDescription, String longDescription, BigDecimal price) {
         this.id = id;
+        this.productCategory = productCategory;
         this.name = name;
-        this.description = description;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
         this.price = price;
-        this.quantity = quantity;
     }
 
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
+                ", productCategory='" + productCategory + '\'' +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", longDescription='" + longDescription + '\'' +
                 ", price=" + price +
-                ", quantity=" + quantity +
                 '}';
     }
 }
