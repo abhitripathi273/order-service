@@ -62,7 +62,7 @@ public class OrderController {
      * @throws IOException
      */
     @GetMapping(path = "/order/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable String orderId) throws IOException {
+    public ResponseEntity<Order> getOrder(@PathVariable String orderId) throws IOException, NotFoundException {
 
         RedissonClient redissonClient = Redisson.create();
         //fetch order from Redis , as OrderId would be the key in Redis
@@ -72,26 +72,15 @@ public class OrderController {
             data = dataBucket.get();
             if (null == data) {
                 log.info("No data found for key {}.", orderId);
-                return new ResponseEntity(getErrorMessageNode(), HttpStatus.NOT_FOUND);
+                throw new NotFoundException("Order not found");
             }
         } else {
             log.warn("No data found for key {}.", orderId);
-            return new ResponseEntity(getErrorMessageNode(), HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Order not found");
         }
 
         Order order = orderService.getOrder(orderId, data);
         return new ResponseEntity(order, HttpStatus.OK);
     }
 
-    /**
-     * Get Error MessageNode
-     *
-     * @return
-     * @throws IOException
-     */
-    private JsonNode getErrorMessageNode() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String errorMessage = "{ \"message\":\"Order not found\" }";
-        return objectMapper.readTree(errorMessage);
-    }
 }
