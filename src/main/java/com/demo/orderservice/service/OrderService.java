@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Order Service
@@ -32,6 +33,8 @@ import java.util.concurrent.ExecutionException;
 public class OrderService {
 
     private static Logger log = LoggerFactory.getLogger(OrderService.class);
+
+    AtomicInteger atm = new AtomicInteger(0);
 
     @Autowired
     private Environment environment;
@@ -54,20 +57,13 @@ public class OrderService {
         // Call Product Microservice if the product exists or not
         //To check if the product its there or not
 
-        /**
-         * Adding a Listener
-         */
-        RedissonClient redissonClient = Redisson.create();
-        RTopic topic2 = redissonClient.getTopic("ORDERTOPIC");
-        topic2.addListener(new RedisListenerImpl());
-
 
         CompletableFuture<Product> product = asyncOrderService.getProduct(productId);
         CompletableFuture<User> user = asyncOrderService.getUserInfo(userId);
 
         CompletableFuture.allOf(user).join();
 
-        if(user.get().getUserId()==null){
+        if (user.get().getUserId() == null) {
             throw new NotFoundException("User not found");
         }
 
@@ -75,7 +71,7 @@ public class OrderService {
 
         CompletableFuture.allOf(product, shippingAddressResponse).join();
 
-        if(product.get().getId()==null){
+        if (product.get().getId() == null) {
             throw new NotFoundException("Product not found");
         }
 
@@ -85,19 +81,24 @@ public class OrderService {
 
         Order order = new Order(orderId, product.get(), user.get(), shippingAddressResponse.get().getBody(), port);
 
+        RedissonClient redissonClient = Redisson.create();
+        RTopic topic = redissonClient.getTopic("ORDER-TOPIC");
+        /**
+         * Publishing to the Topic
+         */
+        topic.publishAsync(order);
+        log.info("Count : " + atm.incrementAndGet() + "| Order Published : " + order.toString());
+
         //Set the Order in Redis with orderId as the Key
         RBucket<String> bucket = redissonClient.getBucket(orderId);
         ObjectMapper objectMapper = new ObjectMapper();
         bucket.set(objectMapper.writeValueAsString(order));
 
-
         /**
-         * Publishing to the Topic
+         * Adding a Listener
          */
-        RTopic topic = redissonClient.getTopic("ORDERTOPIC");
-        topic.publish(order);
+        topic.addListenerAsync(new RedisListenerImpl());
 
-        //redissonClient.shutdown();
         return order;
     }
 
