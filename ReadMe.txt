@@ -124,5 +124,7 @@ Success Response
 Failure response if order id is incorrect
 
 {
-    "message": "Order not found"
+    "message": "Order not found",
+    "details": "uri=/order/754e20ad-ed4a-4d8a-ad5a-2f8e21eb8e0",
+    "date": "2020-05-04"
 }
