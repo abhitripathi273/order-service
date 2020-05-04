@@ -102,21 +102,29 @@ public class OrderService {
         return order;
     }
 
-    /**
-     * Get Order
-     *
-     * @param orderId
-     * @param data
-     * @return
-     * @throws IOException
-     */
     @Cacheable(value = "orderCache", key = "#orderId")
-    public Order getOrder(String orderId, String data) throws IOException {
+    public Order getOrder(String orderId) throws IOException, NotFoundException {
+
+        log.info("Fetching from Redis");
+        RedissonClient redissonClient = Redisson.create();
+        //fetch order from Redis , as OrderId would be the key in Redis
+        RBucket<String> dataBucket = redissonClient.getBucket(orderId);
+        String data = null;
+        if (null != dataBucket) {
+            data = dataBucket.get();
+            if (null == data) {
+                log.info("No data found for key {}.", orderId);
+                throw new NotFoundException("Order not found");
+            }
+        } else {
+            log.warn("No data found for key {}.", orderId);
+            throw new NotFoundException("Order not found");
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         Order order = objectMapper.readValue(data, Order.class);
+        log.info("Fetched from Redis");
         int port = Integer.parseInt(environment.getProperty("local.server.port"));
         order.setPort(port);
         return order;
     }
-
 }
